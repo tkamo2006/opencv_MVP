@@ -6,12 +6,20 @@ height, width = img_color.shape[:2]  # 이미지의 높이와 너비 불러옴, 
 
 img_hsv = cv2.cvtColor(img_color, cv2.COLOR_BGR2HSV)  # cvtColor 함수를 이용하여 hsv 색공간으로 변환
 
-# 색상 영역과 패턴 종류를 정의
-color_ranges = [
-    ((60, 40, 40), (100, 255, 255)),  # 초록색 범위
-    ((170, 50, 50), (180, 255, 255)),  # 빨간색 범위
-    ((120 - 10, 30, 30), (120 + 10, 255, 255))  # 파란색 범위
-]
+# upgarde_green
+lower_green = (50, 150, 15) # hsv 이미지에서 바이너리 이미지로 생성 , 적당한 값 30
+upper_green = (80, 255, 255) 
+
+
+# red
+lower_red1 = (170, 70, 50) # hsv 이미지에서 바이너리 이미지로 생성 , 적당한 값 30
+upper_red1 = (180, 255, 255)
+lower_red2 = (0, 70, 50)
+upper_red2 = (4, 255, 255)
+
+# blue
+lower_blue = (120-10, 30, 30) # hsv 이미지에서 바이너리 이미지로 생성 , 적당한 값 30
+upper_blue = (120+10, 255, 255)
 
 patterns = [
     np.array([[1, 1, 1, 1, 0, 0, 0, 0],
@@ -31,18 +39,26 @@ patterns = [
 ]
 
 while True:
-    n = int(input("1. 초록색, 2. 빨간색, 3. 파란색: "))
-    if 1 <= n <= 3:
-        color_range = color_ranges[n-1]
+    n = int(input("1. 빨간색, 2. 초록색, 3. 파란색: "))
+
+    if n == 1 :
+        img_mask1 = cv2.inRange(img_hsv, lower_red1, upper_red1)
+        img_mask2 = cv2.inRange(img_hsv, lower_red2, upper_red2)
+        final_mask = cv2.bitwise_or(img_mask1, img_mask2)
+        pattern = patterns[n-1]
+        break
+    elif n == 2:
+        final_mask = cv2.inRange(img_hsv, lower_green, upper_green) 
+        pattern = patterns[n-1]
+        break
+    elif n == 3:
+        final_mask = cv2.inRange(img_hsv, lower_blue, upper_blue) 
         pattern = patterns[n-1]
         break
     else:
         print("잘못된 입력입니다. 다시 입력해주세요.")
 
-lower_color = np.array(color_range[0])
-upper_color = np.array(color_range[1])
 
-final_mask = cv2.inRange(img_hsv, lower_color, upper_color)
 img_result = img_color.copy()
 
 # 패턴 입히기
