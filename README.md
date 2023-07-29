@@ -7,7 +7,7 @@
 - 규칙에 따른 패턴화
 
 ## 규칙
-![rule](imgs/rule.png)
+![rule](imgs/rule.PNG)
 
 ## 결과
-![result](imgs/result.png)
+![result](imgs/result.PNG)
